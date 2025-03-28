@@ -3,15 +3,23 @@ import Task from "./components/Task";
 
 export default function App() {
   const [todos, setTodos] = useState([])
+  const [completedTasks, setCompletedTasks] = useState([])
 
   const removeTask = (id) => {
     setTodos(todos.filter((t) => t.id !== id))
   }
 
+  const validateTask = (id) => {
+    const result = todos.find((result) => result.id === id)
+    result.completed = true
+    setCompletedTasks([...completedTasks, result])
+  }
+  
   const onSubmit = (formData) => {
     const todo = {
-      id: new Date(),
-      name: formData.get("todo")
+      id: new Date().toLocaleTimeString(),
+      name: formData.get("todo"),
+      completed: false
     }
     
     if(todo) {
@@ -28,7 +36,7 @@ export default function App() {
       <ul>
       {
         todos.map((t) => (
-          <li className="w-full" key={t.id}><Task deleteTask={removeTask} name={t.name} id={t.id}/></li>
+          <li className="w-full" key={t.id}><Task deleteTask={removeTask} validateTask={validateTask} name={t.name} completed={t.completed} id={t.id}/></li>
         ))
       }
       </ul>

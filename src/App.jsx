@@ -4,12 +4,15 @@ import Task from "./components/Task";
 export default function App() {
   const [todos, setTodos] = useState([])
 
-  const removeTask = (name) => {
-    console.log(`${name}`);
+  const removeTask = (id) => {
+    setTodos(todos.filter((t) => t.id !== id))
   }
 
   const onSubmit = (formData) => {
-    const todo = formData.get("todo")
+    const todo = {
+      id: new Date(),
+      name: formData.get("todo")
+    }
     
     if(todo) {
       setTodos([...todos, todo])
@@ -25,7 +28,7 @@ export default function App() {
       <ul>
       {
         todos.map((t) => (
-          <li className="w-full" key={t}><Task delete={removeTask} name={t}/></li>
+          <li className="w-full" key={t.id}><Task deleteTask={removeTask} name={t.name} id={t.id}/></li>
         ))
       }
       </ul>

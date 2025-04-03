@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Task from "./components/Task";
+import {addTask, deleteTask, getTasks} from "./services/taskService"
 
 export default function App() {
   const [todos, setTodos] = useState([])
@@ -17,10 +18,11 @@ export default function App() {
   
   const onSubmit = (formData) => {
     const todo = {
-      id: new Date().toLocaleTimeString(),
       name: formData.get("todo"),
       completed: false
     }
+
+    addTask(todo)
     
     if(todo) {
       setTodos([...todos, todo])

@@ -1,31 +1,46 @@
-import { useState } from "react";
+import {useEffect, useState} from "react";
 import Task from "./components/Task";
-import {addTask, deleteTask, getTasks} from "./services/taskService"
+import {addTask, deleteTask, getTasks, updateTask} from "./services/taskService"
 
 export default function App() {
   const [todos, setTodos] = useState([])
   const [completedTasks, setCompletedTasks] = useState([])
 
-  const removeTask = (id) => {
-    setTodos(todos.filter((t) => t.id !== id))
+  useEffect(() => {
+    fetchTasks()
+  }, [])
+
+  const fetchTasks = async () => {
+    const tasks = await getTasks();
+    setTodos([...tasks]);
   }
 
-  const validateTask = (id) => {
-    const result = todos.find((result) => result.id === id)
-    result.completed = true
+  const removeTask = (id) => {
+    deleteTask(id)
+    setTodos(todos.filter((t) => t._id !== id))
+  }
+
+  const validateTask = async (id) => {
+    const result = todos.find((result) => result._id === id)
+    result.completed === true ? result.completed = false : result.completed = true
+    updateTask(result)
     setCompletedTasks([...completedTasks, result])
   }
   
-  const onSubmit = (formData) => {
-    const todo = {
-      name: formData.get("todo"),
-      completed: false
-    }
+  const onSubmit = async (formData) => {
+    try {
+      const todo = {
+        name: formData.get("todo"),
+        completed: false
+      }
 
-    addTask(todo)
-    
-    if(todo) {
-      setTodos([...todos, todo])
+      const savedTask = await addTask(todo)
+      console.log(savedTask)
+      if(savedTask) {
+        setTodos([...todos, savedTask])
+      }
+    } catch (error) {
+      console.log("error when adding task", error)
     }
   }
 
@@ -38,7 +53,7 @@ export default function App() {
       <ul>
       {
         todos.map((t) => (
-          <li className="w-full" key={t.id}><Task deleteTask={removeTask} validateTask={validateTask} name={t.name} completed={t.completed} id={t.id}/></li>
+          <li className="w-full" key={t._id}><Task deleteTask={removeTask} validateTask={validateTask} name={t.name} completed={t.completed} id={t._id}/></li>
         ))
       }
       </ul>

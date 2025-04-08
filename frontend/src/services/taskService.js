@@ -5,7 +5,7 @@ const API_URL = "http://localhost:9999/tasks";
 // Récupérer toutes les tâches
 export const getTasks = async () => {
   try {
-    const response = await axios.get(API_URL);
+    const response = await axios.get(API_URL + '/all');
     return response.data;  // Axios parse la réponse en JSON automatiquement
   } catch (error) {
     console.error("Erreur lors de la récupération des tâches", error);
@@ -16,7 +16,7 @@ export const getTasks = async () => {
 // Ajouter une tâche
 export const addTask = async (task) => {
   try {
-    const response = await axios.post(API_URL+'/add', task);
+    const response = await axios.post(API_URL + '/add', task);
     return response.data;
   } catch (error) {
     console.error("Erreur lors de l'ajout de la tâche", error);
@@ -27,9 +27,20 @@ export const addTask = async (task) => {
 // Supprimer une tâche
 export const deleteTask = async (id) => {
   try {
-    await axios.delete(`${API_URL}/${id}`);
+    await axios.delete(`${API_URL}/delete/${id}`);
   } catch (error) {
     console.error("Erreur lors de la suppression de la tâche", error);
+    throw error;
+  }
+};
+
+// Update une tâche
+export const updateTask = async (task) => {
+  try {
+    const response = await axios.post(`${API_URL}/update/${task._id}`, task);
+    return response.data;
+  } catch (error) {
+    console.error("Erreur lors de la validation de la tâche", error);
     throw error;
   }
 };

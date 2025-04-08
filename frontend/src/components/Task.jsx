@@ -9,6 +9,7 @@ const Task = ({name, deleteTask, validateTask, completed, id}) => {
           type="checkbox" 
           className="cursor-pointer"
           onChange={() => validateTask(id)}
+          checked={completed}
         />
         <span className={completed ? "line-through text-gray-500" : ""}>{name}</span>
       </div>

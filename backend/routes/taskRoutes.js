@@ -4,7 +4,7 @@ import Task from "../models/Task.js"
 const router = express.Router();
 
 // Obtenir toutes les tâches
-router.get("/all", async (res) => {
+router.get("/all", async (req, res) => {
   try {
     const tasks = await Task.find();
     res.json(tasks);
@@ -31,6 +31,16 @@ router.delete("/delete/:id", async (req, res) => {
     res.json({ message: "Tâche supprimée" });
   } catch (err) {
     res.status(500).json({ error: err.message });
+  }
+});
+
+// Ajouter une nouvelle tâche
+router.post("/update/:id", async (req, res) => {
+  try {
+    await Task.findById(req.params.id).updateOne(req.body);
+    res.status(201).json({message: "tâche mise à jour"});
+  } catch (err) {
+    res.status(400).json({ error: err.message });
   }
 });
 
